@@ -8,7 +8,7 @@ Repository này dành cho **bộ cài và hướng dẫn sử dụng**, không c
 
 **[Mở trang tải bản mới nhất](https://github.com/duylk-nhtc/JigTest-Releases/releases/latest)**
 
-Trong phần **Assets**, tải file có tên `JigTest-Setup-<version>.exe`, ví dụ `JigTest-Setup-1.0.5.exe`.
+Trong phần **Assets**, tải file có tên `JigTest-Setup-<version>.exe`, ví dụ `JigTest-Setup-1.1.1.exe`.
 
 Không tải **Source code (zip)** hoặc **Source code (tar.gz)** để cài ứng dụng. Hai file đó do GitHub tự tạo, không phải bộ cài.
 
@@ -46,7 +46,7 @@ Bộ cài hiện chưa được ký số; Windows có thể hiển thị cảnh 
 3. Nhấn nút **START vật lý trên JIG** để bắt đầu; nhập mã hoặc nhấn Enter không tự chạy test.
 4. Theo dõi thanh tiến trình và kết quả:
    - **LAN link:** có kết nối vật lý.
-   - **IPv4 address (DHCP):** địa chỉ IPv4 hợp lệ và khác `0.0.0.0`.
+   - **IPv4 address:** địa chỉ IPv4 hợp lệ và khác `0.0.0.0`.
    - **PASS** xanh lá khi cả hai mục đạt; **FAIL** đỏ nếu tiêu chí không đạt.
 5. Nhấn **STOP vật lý trên JIG** để dừng lượt; app hiển thị **STOPPED**, không tự tạo kết quả nghiệm thu.
 6. Khi không chạy test, nhấn **Space** để xóa ID cũ, đưa Overall result về `--` và đặt con trỏ về ô ID, sẵn sàng quét mã tiếp theo.
@@ -59,11 +59,14 @@ Trong lúc chờ JIG, thanh tiến trình có thể chạy không xác định p
 
 | Bộ kiểm tra | Mã JIG | Nội dung |
 |---|---|---|
-| Ethernet | `JIG-ETH-01` | LAN link và IPv4 DHCP; đã có luồng START/STOP vật lý |
+| Ethernet | `JIG-ETH-01` | LAN link và IPv4; đã có luồng START/STOP vật lý |
 | Vota | `JIG-VOTA-01` | 8 mục: Initialize ISP3080, LED, Motion Sensor, Serial ID, MAC ID, Battery Voltage, Battery Charging, SOS |
-| Decode | `NJP1-DECODE-v1` | LOL và LOS; ID phải có 10 chữ số và bắt đầu bằng 08 |
+| Decode | `NJP1-DECODE-v1` | 38.4 MHz, 2 Hz, LOL và LOS; ID 10 chữ số đầu 08 |
+| Jitter | `NJP1-SYNC-v1` | 38.4 MHz, 2 Hz, LOL và LOS; ID 10 chữ số đầu 06 hoặc 07 |
 
-**Giới hạn:** Vota và Decode hiện có danh sách/logic kiểm thử, nhưng giao thức nút vật lý để khởi động từ màn hình vận hành mới chưa được tích hợp. Không coi hai bộ này đã sẵn sàng nghiệm thu chỉ vì danh sách xuất hiện. Vota còn cần server ngưỡng và bảng lệnh firmware được kỹ thuật viên xác nhận.
+**Decode/Jitter:** nhập ID rồi nhấn START vật lý. App chờ 5 giây, đo 38.4 MHz và 2 Hz, lặp đủ 3 lần với 2 chu kỳ POWER/OFF (ACK rồi giữ 3 giây) và POWER/ON (ACK rồi chờ 5 giây). Chỉ gửi RESULT sau cùng. Firmware phải hỗ trợ POWER/POWERACK; driver và SDK Hantek x64 cài riêng. Cả hai sản phẩm dùng CH1 cho 38.4 MHz, CH2 cho 2 Hz và đầu dò x1 từ v1.1.1. Cần kiểm chứng băng thông đầu dò x1 tại 38.4 MHz, không mặc định Vmax chính xác ngoài băng thông.
+
+**Giới hạn Vota:** còn cần server ngưỡng, bảng lệnh firmware và luồng khởi động được kỹ thuật viên xác nhận.
 
 JIG chưa được hỗ trợ sẽ hiển thị thông báo chưa có bộ kiểm tra. Khi chưa kết nối hoặc đang test, ô ID bị khóa. ID sai độ dài/tiền tố không được nhận để bắt đầu test; ô nhập chỉ chấp nhận số 0–9.
 
@@ -93,13 +96,30 @@ Chưa có updater. Tải và cài thủ công phiên bản mới nhất một l�
 Nâng cấp cùng thư mục thay thế ứng dụng cũ, không tạo hai app chạy song song. Shortcut cũ mở bản mới; không cần gỡ bản cũ trước.
 
 - Giữ nguyên cấu hình trạm trong `config.json` và dữ liệu đã lưu.
-- Kỹ thuật viên cần bổ sung cấu hình/profile mới nếu bản phát hành yêu cầu; nâng cấp không tự ghi đè cấu hình trạm bằng bản mẫu.
+- Từ v1.1.0, app nạp profile Decode/Sync mới từ mặc định đi kèm khi chạy, vẫn giữ token và cấu hình riêng trên đĩa.
 - File Setup cũ trong Downloads hoặc các bản portable ở thư mục khác không bị tự xóa.
 - Sao lưu dữ liệu trước khi nâng cấp. Không đổi vị trí cài nếu muốn nâng cấp tại chỗ.
 
 Phiên bản được thể hiện trong tên cửa sổ và tiêu đề ứng dụng từ bản 1.0.5, ví dụ **Jig test v1.0.5**.
 
 ## Lịch sử phiên bản
+
+### v1.1.1
+
+- Thống nhất Decode và Jitter: **38.4 MHz dùng CH1, 2 Hz dùng CH2**.
+- Đổi hệ số đầu dò production từ x10 sang **x1**; không đổi ngưỡng tần số và thời gian POWER.
+- Cần kiểm chứng đầu dò x1 đủ băng thông 38.4 MHz; hệ số phần mềm không khắc phục suy hao/méo do đầu dò.
+- Bộ cài `JigTest-Setup-1.1.1.exe`, không kèm driver/DLL SDK Hantek.
+
+### v1.1.0
+
+- Tích hợp Hantek vào checklist Decode/Jitter; biểu đồ chỉ hiện khi nhận đúng JIG, hiển thị Vmax và tần số; Vmax chưa dùng để PASS/FAIL.
+- Đo đủ 3 lượt, chờ START 5 giây, OFF 3 giây và ON ổn định 5 giây; chờ POWERACK trước bước tiếp theo.
+- 38.4 MHz: mục tiêu 38.370–38.430 MHz, vùng capture 38.2–38.5 MHz; 2 Hz: 1–2.8 Hz, 11 quan sát, FAIL khi có quan sát không hợp lệ thứ ba.
+- Cả ba lượt sóng phải PASS; LOL/LOS vòng cuối phải bằng 0 từ DATA hợp lệ. Lỗi thiết bị/ACK hoặc timeout hủy lượt không tự tạo PASS.
+- Thêm Jitter ID đầu 06/07; giữ Decode đầu 08. Bỏ nhãn DHCP ở ETH, không đổi tiêu chí link/IP.
+- Giữ AppId để nâng cấp tại chỗ; nạp profile Decode/Sync mới trong khi giữ cấu hình riêng của trạm.
+- Cấu hình kênh/que của bản này đã được thay thế bởi v1.1.1. Chưa kiểm chứng phần cứng sản xuất.
 
 ### v1.0.5
 
@@ -159,7 +179,7 @@ Không đăng các file này hoặc token/cấu hình riêng của trạm lên r
 |---|---|
 | Không nhận JIG | Kiểm tra cáp, driver, cổng COM và firmware; đóng phần mềm khác đang giữ COM |
 | Không nhập được ID | Chưa kết nối JIG được hỗ trợ hoặc đang test |
-| ID không hợp lệ | Đúng 10 số, tiền tố 09 cho LAN hoặc 08 cho Decode |
+| ID không hợp lệ | Đúng 10 số, tiền tố 09 cho LAN, 08 cho Decode, 06/07 cho Jitter |
 | Không thấy bản cập nhật | Mở lại app, kiểm tra Internet, bản hiện tại và release mới nhất |
 | Không tải/cài được cập nhật | Kiểm tra proxy/chính sách IT; có thể tải bộ cài thủ công từ trang Releases |
 | Không có bài kiểm tra | Mã JIG chưa có profile tương ứng |
