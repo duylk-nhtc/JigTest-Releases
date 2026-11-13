@@ -8,7 +8,7 @@ Repository này dành cho **bộ cài và hướng dẫn sử dụng**, không c
 
 **[Mở trang tải bản mới nhất](https://github.com/duylk-nhtc/JigTest-Releases/releases/latest)**
 
-Trong phần **Assets**, tải file có tên `JigTest-Setup-<version>.exe`, ví dụ `JigTest-Setup-1.1.1.exe`.
+Trong phần **Assets**, tải file có tên `JigTest-Setup-<version>.exe`, bản hiện tại **`JigTest-Setup-1.1.2.exe`**.
 
 Không tải **Source code (zip)** hoặc **Source code (tar.gz)** để cài ứng dụng. Hai file đó do GitHub tự tạo, không phải bộ cài.
 
@@ -104,6 +104,19 @@ Phiên bản được thể hiện trong tên cửa sổ và tiêu đề ứng d
 
 ## Lịch sử phiên bản
 
+### v1.1.2 — 13/11/2026
+
+- Sửa lỗi khởi động `FileNotFoundError` do thiếu cấu hình mặc định nội bộ trong bản đóng gói.
+- Dùng `release_defaults.json` riêng, kiểm tra bắt buộc tồn tại sau build; không bị loại bởi quy tắc bảo vệ `config.json` của trạm.
+- Giữ AppId, cấu hình, token và dữ liệu của máy đã cài. Cấu hình mặc định đóng gói không chứa token trạm.
+- Giữ cấu hình v1.1.1: **38.4 MHz CH1, 2 Hz CH2, probe x1**; không đổi ngưỡng, thời gian POWER hoặc firmware.
+- Bộ cài **`JigTest-Setup-1.1.2.exe`**; 88 kiểm thử tự động đã qua, build bộ cài thành công.
+- Bản vá thử nghiệm cùng version 1.1.1 đã được thay thế bằng bản phát hành 1.1.2 này.
+- Chưa xác nhận đầy đủ khởi động GUI/bản cài trên máy đích; chưa kiểm chứng nâng cấp hoặc phép đo bằng phần cứng thật.
+
+> **Máy 1.1.1 đang lỗi khởi động:** tải và chạy bộ cài 1.1.2 thủ công vào vị trí cài cũ. Lỗi xảy ra trước bước kiểm tra update nên máy này không tự tải bản vá được. Không xóa cấu hình hoặc dữ liệu trạm.
+
+
 ### v1.1.1
 
 - Thống nhất Decode và Jitter: **38.4 MHz dùng CH1, 2 Hz dùng CH2**.
@@ -177,6 +190,7 @@ Không đăng các file này hoặc token/cấu hình riêng của trạm lên r
 
 | Hiện tượng | Cách kiểm tra |
 |---|---|
+| App 1.1.1 báo thiếu file cấu hình khi mở | Tải bộ cài 1.1.2 và cài lại vào vị trí cũ, không xóa dữ liệu |
 | Không nhận JIG | Kiểm tra cáp, driver, cổng COM và firmware; đóng phần mềm khác đang giữ COM |
 | Không nhập được ID | Chưa kết nối JIG được hỗ trợ hoặc đang test |
 | ID không hợp lệ | Đúng 10 số, tiền tố 09 cho LAN, 08 cho Decode, 06/07 cho Jitter |
