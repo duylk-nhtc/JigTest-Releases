@@ -8,7 +8,7 @@ Repository này dành cho **bộ cài và hướng dẫn sử dụng**, không c
 
 **[Mở trang tải bản mới nhất](https://github.com/duylk-nhtc/JigTest-Releases/releases/latest)**
 
-Trong phần **Assets**, tải file có tên `JigTest-Setup-<version>.exe`, bản hiện tại **`JigTest-Setup-1.1.2.exe`**.
+Trong phần **Assets**, tải file có tên `JigTest-Setup-<version>.exe`, bản hiện tại **`JigTest-Setup-1.1.3.exe`**.
 
 Không tải **Source code (zip)** hoặc **Source code (tar.gz)** để cài ứng dụng. Hai file đó do GitHub tự tạo, không phải bộ cài.
 
@@ -49,7 +49,7 @@ Bộ cài hiện chưa được ký số; Windows có thể hiển thị cảnh 
    - **IPv4 address:** địa chỉ IPv4 hợp lệ và khác `0.0.0.0`.
    - **PASS** xanh lá khi cả hai mục đạt; **FAIL** đỏ nếu tiêu chí không đạt.
 5. Nhấn **STOP vật lý trên JIG** để dừng lượt; app hiển thị **STOPPED**, không tự tạo kết quả nghiệm thu.
-6. Khi không chạy test, nhấn **Space** để xóa ID cũ, đưa Overall result về `--` và đặt con trỏ về ô ID, sẵn sàng quét mã tiếp theo.
+6. Sau khi có PASS/FAIL, nhấn **STOP trên JIG** hoặc **Space** để xóa ID, Overall, checklist, tiến trình và đồ thị, đưa con trỏ về ô ID. Space vẫn dùng được khi không chạy test. Lịch sử kết quả đã lưu không bị xóa.
 
 Trong lúc chờ JIG, thanh tiến trình có thể chạy không xác định phần trăm. Quá thời gian chờ mặc định 70 giây sẽ hiển thị **NO RESULT**, không tự coi thiết bị là FAIL; firmware có thể vẫn đang test.
 
@@ -71,6 +71,8 @@ Trong lúc chờ JIG, thanh tiến trình có thể chạy không xác định p
 JIG chưa được hỗ trợ sẽ hiển thị thông báo chưa có bộ kiểm tra. Khi chưa kết nối hoặc đang test, ô ID bị khóa. ID sai độ dài/tiền tố không được nhận để bắt đầu test; ô nhập chỉ chấp nhận số 0–9.
 
 ## Cập nhật ứng dụng
+
+Từ v1.1.3, mỗi lần mở app sẽ dọn bộ cài cũ trong `data\updates` trước khi kiểm tra bản mới. Chỉ xóa bộ cài có phiên bản ≤ bản đang chạy; giữ bản mới hơn và không xóa kết quả test.
 
 ### Bản 1.0.5 trở lên
 
@@ -104,15 +106,20 @@ Phiên bản được thể hiện trong tên cửa sổ và tiêu đề ứng d
 
 ## Lịch sử phiên bản
 
+### v1.1.3 — 13/11/2026
+
+- Ethernet nhận định dạng firmware `ETH|Link:0,IP:0.0.0.0`, vẫn tương thích định dạng `[0][0.0.0.0]` cũ. Link mất hoặc IP `0.0.0.0` được ghi FAIL khi có lượt test hợp lệ đang chạy.
+- Sau kết quả Ethernet hợp lệ, gửi `RESULT|PASS` hoặc `RESULT|FAIL` về ESP32 để firmware điều khiển đèn. STOP/ngắt kết nối/hết thời gian chờ không tự tạo kết quả DUT.
+- STOP trên JIG sau PASS/FAIL xóa phần hiển thị giống Space; STOP khi đang test vẫn dừng lượt. Space giữ nguyên, đồng thời xóa checklist, tiến trình và đồ thị. Không xóa lịch sử đã lưu.
+- Thanh tiến trình màu xanh lá; ô ID chỉ nhận tối đa 10 chữ số, vẫn kiểm tra tiền tố theo JIG.
+- Tự dọn bộ cài `JigTest-Setup-x.x.x.exe` trong `data\updates` trước bước kiểm tra cập nhật: chỉ xóa phiên bản nhỏ hơn hoặc bằng app đang chạy. Giữ bộ cài mới hơn; file bị khóa được thử lại lần mở sau. Không dọn Downloads hay dữ liệu test.
+
 ### v1.1.2 — 13/11/2026
 
 - Sửa lỗi khởi động `FileNotFoundError` do thiếu cấu hình mặc định nội bộ trong bản đóng gói.
 - Dùng `release_defaults.json` riêng, kiểm tra bắt buộc tồn tại sau build; không bị loại bởi quy tắc bảo vệ `config.json` của trạm.
 - Giữ AppId, cấu hình, token và dữ liệu của máy đã cài. Cấu hình mặc định đóng gói không chứa token trạm.
 - Giữ cấu hình v1.1.1: **38.4 MHz CH1, 2 Hz CH2, probe x1**; không đổi ngưỡng, thời gian POWER hoặc firmware.
-- Bộ cài **`JigTest-Setup-1.1.2.exe`**; 88 kiểm thử tự động đã qua, build bộ cài thành công.
-- Bản vá thử nghiệm cùng version 1.1.1 đã được thay thế bằng bản phát hành 1.1.2 này.
-- Chưa xác nhận đầy đủ khởi động GUI/bản cài trên máy đích; chưa kiểm chứng nâng cấp hoặc phép đo bằng phần cứng thật.
 
 > **Máy 1.1.1 đang lỗi khởi động:** tải và chạy bộ cài 1.1.2 thủ công vào vị trí cài cũ. Lỗi xảy ra trước bước kiểm tra update nên máy này không tự tải bản vá được. Không xóa cấu hình hoặc dữ liệu trạm.
 
